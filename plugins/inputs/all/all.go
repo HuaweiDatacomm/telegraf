@@ -59,6 +59,8 @@ import (
 	_ "github.com/influxdata/telegraf/plugins/inputs/http"
 	_ "github.com/influxdata/telegraf/plugins/inputs/http_listener_v2"
 	_ "github.com/influxdata/telegraf/plugins/inputs/http_response"
+	_ "github.com/influxdata/telegraf/plugins/inputs/huawei_telemetry_dialin"
+	_ "github.com/influxdata/telegraf/plugins/inputs/huawei_telemetry_dialout"
 	_ "github.com/influxdata/telegraf/plugins/inputs/httpjson"
 	_ "github.com/influxdata/telegraf/plugins/inputs/icinga2"
 	_ "github.com/influxdata/telegraf/plugins/inputs/infiniband"

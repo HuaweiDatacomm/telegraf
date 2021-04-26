@@ -2,7 +2,7 @@ package parsers
 
 import (
 	"fmt"
-
+	"github.com/influxdata/telegraf/models"
 	"github.com/influxdata/telegraf"
 	"github.com/influxdata/telegraf/plugins/parsers/collectd"
 	"github.com/influxdata/telegraf/plugins/parsers/csv"
@@ -10,6 +10,8 @@ import (
 	"github.com/influxdata/telegraf/plugins/parsers/form_urlencoded"
 	"github.com/influxdata/telegraf/plugins/parsers/graphite"
 	"github.com/influxdata/telegraf/plugins/parsers/grok"
+	"github.com/influxdata/telegraf/plugins/parsers/huawei_grpc_gpb"
+	"github.com/influxdata/telegraf/plugins/parsers/huawei_grpc_json"
 	"github.com/influxdata/telegraf/plugins/parsers/influx"
 	"github.com/influxdata/telegraf/plugins/parsers/json"
 	"github.com/influxdata/telegraf/plugins/parsers/logfmt"
@@ -17,6 +19,7 @@ import (
 	"github.com/influxdata/telegraf/plugins/parsers/prometheus"
 	"github.com/influxdata/telegraf/plugins/parsers/value"
 	"github.com/influxdata/telegraf/plugins/parsers/wavefront"
+	"github.com/influxdata/telegraf/selfstat"
 )
 
 type ParserFunc func() (Parser, error)
@@ -349,4 +352,28 @@ func NewPrometheusParser(defaultTags map[string]string) (Parser, error) {
 	return &prometheus.Parser{
 		DefaultTags: defaultTags,
 	}, nil
+}
+func NewHuaweiGrpcGpbParser() (Parser, error) {
+	tags := map[string]string{"parsers": "huawei_grpc_gpb_parser"}
+	grpcRegister := selfstat.Register("huawei_grpc_gpb_parser", "errors", tags)
+	logger := models.NewLogger("parsers", "huawei_grpc_gpb_parser", "")
+	logger.OnErr(func() {
+		grpcRegister.Incr(1)
+	})
+	parser, err := huawei_grpc_gpb.New()
+	if err != nil {
+		return nil, err
+	}
+	models.SetLoggerOnPlugin(parser, logger)
+	return parser, err
+}
+
+func NewHuaweiGrpcJsonParser() (Parser, error) {
+	tags := map[string]string{"parsers": "huawei_grpc_json_parser"}
+	grpcRegister := selfstat.Register("huawei_grpc_json_parser", "errors", tags)
+	logger := models.NewLogger("parsers", "huawei_grpc_json_parser", "")
+	logger.OnErr(func() {grpcRegister.Incr(1)})
+	parser, err := huawei_grpc_json.New()
+	models.SetLoggerOnPlugin(parser, logger)
+	return parser, err
 }

@@ -27,4 +27,5 @@ import (
 	_ "github.com/influxdata/telegraf/plugins/processors/template"
 	_ "github.com/influxdata/telegraf/plugins/processors/topk"
 	_ "github.com/influxdata/telegraf/plugins/processors/unpivot"
+	_ "github.com/influxdata/telegraf/plugins/processors/metric_match"
 )
